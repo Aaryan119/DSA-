@@ -1,0 +1,53 @@
+1.)
+  wild pointer is a pointer that is untialised or has been deleted.
+  this means that the pointer does not point to a valid memory and accessing 
+  or deferencing wild pointer can result undefined behaviour
+
+2)
+  untialised pointer: if you declare the pointer variable without assigned it
+  will print to random value or try to access to random value . this can crash 
+  or behave unpredactively
+  
+  example- int* ptr;
+           cout<<*ptr<<endl;
+           
+           
+  
+3)
+   deleting pointer: if u delete the pointer and then try to access it then it will become
+   wild pointer and can point to an random value or garbage value
+   
+   example- int number=5;
+            int* ptr=&number;
+            delete ptr;
+            cout<<*ptr<<endl;
+   
+4)
+  pointer to non_existent variable-if u point a pointer to a non_existent variable that do not 
+  exist in the scope that means when they print it it can give u unpredicatable result.
+    
+  example- int *ptr=&x;
+           cout<<*ptr<<endl;
+           
+           
+  Solution to these problems:
+  1) to avoid unintialised pointer: you should always intiliased the pointer to nullptr if u are not intialising it to anything else thats a good practise 
+  
+  example- int* ptr=nullptr;
+           cout<<*ptr<<endl;
+  
+  2) to avoid delete wild pointer: u should avoid delete the pointer that has not been intialised using new operator why?
+  when u alloacate memory using the new operator it creates a heap space for u to store the particular type there so u should 
+  also use the delete operator to deallocate the memory or heap to clear the space in heap this is important to avoid memeory leaks 
+  
+  however u should avoid using delete operator if they have not used new operator doing so can led to undefined behaviour 
+  you should set the pointer to nullptr for safety
+  
+  int* ptr=new int;
+  delete ptr;
+  *ptr=nullptr;
+  cout<<*ptr<<endl;
+  
+  3)to avoid pointer to non_existent variable- you should always avoid using or intialising with the unintialised variable because it can automatically lead to
+  wild pointer
+  
