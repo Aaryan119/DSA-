@@ -1,0 +1,61 @@
+1)void pointers:
+void pointer are the pointers that are generic pointer means the pointer that can point to any data type
+void pointer are created or defined by the keyword void
+example:
+void* ptr;
+
+we can declared it but cannot dereference it because the compiler doesnot know that it is pointing to which data type 
+so you have to manually do it using the operator static_cast<data_type>(ptr name)
+example-
+
+void* ptr;
+int number=9;
+ptr=&number;
+int* intptr=static_cast<int*>(ptr);
+cout<<*intptr<<endl; //print 9
+
+
+void pointer are commonly used for dynamic memory allocation using the new operator when we allocate the memory using new operator
+the type of memory allocated to it is determined at runtime .we can use void pointer to point the dynamically allocate memory 
+and then cast the data type
+
+example-
+int *ptr=new int;
+void* voidptr=&ptr;
+int* intptr=static_cast<int*>(voidptr);
+*intptr=10;
+cout<<*ptr<<endl;//prints 10
+
+void pointer are commonly used for commonly used for dynamic memory allocation and for passing pointer to the function that accepts any 
+type of data
+here is one example in the function as an argument:
+void example(void *ptr) {
+    int *i = (int *) ptr;
+    printf("%d", *i);
+}
+And here is an example using return type using an argument:
+#include<iostream>
+using namespace std;
+
+
+void *get_address(int *arr, int index) {
+    return (arr + index);
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int index = 2;
+    int *ptr = static_cast<int*>(get_address(arr, index));
+    printf("The value at index %d is %d\n", index, *ptr);
+    return 0;
+}
+
+
+
+
+2)
+static cast is the cast feature to convert any pointer or variable to another data type using this syntax static_cast<new data_type>(name of ptr)
+static cast is a compile time operator which means the conversion occurs when the compiling is happening this can result in code running faster 
+code execution since the compiler can optimised the base code based on the specific data type that are being used however that the cast can fail at runtime
+if the data type is not compatible
+
