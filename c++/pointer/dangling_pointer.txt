@@ -1,0 +1,136 @@
+dangling pointer
+dangling pointer is a pointer that points to free or deallocated memory location that has a free memory and u try to access to it
+this can lead to program crash or undefined behaviour this can be serious problem in c++ where pointer are widely used to manage
+memory and data structure these are called dangling pointer
+
+dangling pointer typically arise when the you delete a free block of memory but then fail to update the pointer to reflect 
+the deallocotion
+
+for example, consider the following code:
+int*  p=new int;
+*p=42;
+delete p;
+cout<<*p<<endl;
+
+how this situtation occurs?
+1)freeing memory while a pointer still points to it:this is the most common scenario for creating a dangling pointer.if you delete or free memory
+while a pointer a point to the memory the pointer becomes dangling pointer
+
+2.)returning a pointer to a local variable: if you return a pointer that is at local space from a function as soon as u return the variable the local variable 
+goes out of scope
+
+3.) using a pointer after it is been freed : if u continue  to use the pointer that is deleted than the program will crash or will have undefined behaviour
+
+how to avoid dangling pointer?
+
+1.) use smart pointer: c++ provide several types of smart pointers such as unique_ptr or weak_ptr or shared_ptr  that automatically manages the memory
+and prevent dangling pointer. smart pointer raii(resource acquistion is intialization) to ensure that memory is freed when its no longer needed
+
+2.) use reference instead of pointer:if u dont need to modify the value that pointer points to.u can use reference instead.reference are similar to pointer
+but do not require explicit memory managment 
+// This code uses a pointer to print the value of a variable.
+int main() {
+  int value = 5;
+  int *pointer = &value;
+  std::cout << *pointer << std::endl;
+  return 0;
+}
+
+// This code uses a reference to print the value of a variable.
+int main() {
+  int value = 5;
+  int &reference = value;
+  std::cout << reference << std::endl;
+  return 0;
+}
+There are several advantages to using references instead of pointers in this case. First, references are more concise and easier to read. Second, references do not require explicit memory management. Third, references are more type-safe than pointers.
+
+In general, it is best to use references instead of pointers whenever possible. References are safer, easier to read, and more concise than pointers.
+
+3.) avoid returning pointer to local variable: if u need to return value from function consider using a reference variable or smart pointer instead of raw
+pointer.if u must used raw pointer than please take care that memory is not freed or deleted
+// This code uses a raw pointer to create a new object.
+int main() {
+  int *pointer = new int(5);
+  std::cout << *pointer << std::endl;
+  delete pointer;
+  return 0;
+}
+
+// This code uses a smart pointer to create a new object.
+int main() {
+  std::unique_ptr<int> pointer(new int(5));
+  std::cout << *pointer << std::endl;
+  // No need to delete pointer, it will be deleted automatically when it goes out of scope.
+  return 0;
+}
+unique_ptr - A unique_ptr is a smart pointer that can only be owned by one object at a time. When the unique_ptr goes out of scope, the object it points to is automatically deleted.
+shared_ptr - A shared_ptr is a smart pointer that can be owned by multiple objects at the same time. When the last shared_ptr that points to an object goes out of scope, the object is automatically deleted.
+weak_ptr - A weak_ptr is a smart pointer that cannot own an object. It can only be used to observe the lifetime of an object that is owned by a shared_ptr.
+
+#include <iostream>
+#include <memory>
+
+int main() {
+  // Create a shared_ptr to an int.
+  std::shared_ptr<int> ptr(new int(5));
+
+  // Print the value of the int.
+  std::cout << *ptr << std::endl;
+
+  // Create another shared_ptr to the same int.
+  std::shared_ptr<int> ptr2(ptr);
+
+  // Print the value of the int again.
+  std::cout << *ptr2 << std::endl;
+
+  // Delete the first shared_ptr.
+  ptr.reset();
+
+  // Print the value of the int again.
+  std::cout << *ptr2 << std::endl;
+
+  // The int is still alive, because there is still one shared_ptr pointing to it.
+
+  // Delete the second shared_ptr.
+  ptr2.reset();
+
+  // The int is now deleted, because there are no more shared_ptrs pointing to it.
+  return 0;
+}
+
+
+#include <iostream>
+#include <memory>
+
+int main() {
+  // Create a shared_ptr to an int.
+  std::shared_ptr<int> ptr(new int(5));
+
+  // Create a weak_ptr to the same int.
+  std::weak_ptr<int> weak_ptr(ptr);
+
+  // Print the value of the int.
+  if (weak_ptr.lock()) {
+    std::cout << *weak_ptr.lock() << std::endl;
+  }
+
+  // Delete the shared_ptr.
+  ptr.reset();
+
+  // Print the value of the int again.
+  if (weak_ptr.lock()) {
+    std::cout << *weak_ptr.lock() << std::endl;
+  }
+
+  // The int is now gone, because the shared_ptr that owned it has been deleted.
+  // The weak_ptr is now invalid, and trying to dereference it will result in a nullptr.
+  // std::cout << *weak_ptr.lock() << std::endl; // This will print nullptr.
+
+  return 0;
+}
+
+4.) nullify pointer after deleting or freeing memory: to dangling pointer always nullify pointer after deleting or freeing the memory so that the program 
+do not become dangling pointer
+
+use smart pointer to avoid dangling pointer mistake
